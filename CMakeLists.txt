@@ -39,6 +39,10 @@ find_package(HepMC3 REQUIRED)
 include_directories(${HEPMC3_INCLUDE_DIR})
 #include(${HEPMC3_USE_FILE})
 
+### VGM
+find_package(VGM REQUIRED)
+include_directories(${VGM_INCLUDE_DIRS})
+
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 ### add subdirectories

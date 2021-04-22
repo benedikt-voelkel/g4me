@@ -2,6 +2,11 @@
 /// @email: preghenella@bo.infn.it
 
 #include <fstream>
+// VGM to store geometry with ROOT geometry
+#include "Geant4GM/volumes/Factory.h"
+#include "Geant4GM/volumes/VolumeMap.h"
+#include "RootGM/volumes/Factory.h"
+#include "TGeoManager.h"
 
 #include "DetectorConstruction.hh"
 #include "DetectorInfo.hh"
@@ -306,6 +311,22 @@ DetectorConstruction::Construct() {
     pvidMapFile << phVol->GetCopyNo() << " " << phVol->GetName() << "\n";
   }
   pvidMapFile.close();
+
+
+  // Export as ROOT geometry
+  auto rootGeoMgr = new TGeoManager("rootg4meGeometry", "rootg4meGeometry");
+  Geant4GM::Factory g4FactoryExport;
+  g4FactoryExport.SetDebug(1);
+  g4FactoryExport.Import(world_pv);
+
+  RootGM::Factory rtFactoryExport;
+  rtFactoryExport.SetDebug(1);
+  g4FactoryExport.Export(&rtFactoryExport);
+  rootGeoMgr->CloseGeometry();
+  rootGeoMgr->Export("g4meGeometry.root");
+
+  delete rootGeoMgr;
+  delete Geant4GM::VolumeMap::Instance();
 
   return world_pv;
 }
